@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected $fillable = [
+        'quiz_id',
+        'name'
+    ];
     /**
      * Run the migrations.
      */
