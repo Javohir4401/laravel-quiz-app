@@ -13,7 +13,7 @@ class QuizController extends Controller
      */
     public function index()
     {
-        return view('dashboard.quizzes', ['quizzes' => Quiz::withCount('questions')->get()]);
+        return view('dashboard.quizzes', ['quizzes' => Quiz::withCount('questions')->orderBy('id','desc')->get()]);
     }
 
     /**
@@ -40,7 +40,7 @@ class QuizController extends Controller
             'title' => $validator['title'],
             'description' => $validator['description'],
             'time_limit' => $validator['timeLimit'] ?? 30,
-            'slug' => Str::slug(strtotime('now') . '/' . $request['title'])
+            'slug' => Str::slug(strtotime('now') . '-' . $request['title'])
         ]);
 
         foreach ($validator['questions'] as $question) {
@@ -67,6 +67,7 @@ class QuizController extends Controller
         return view('dashboard.edit-quiz', compact('quiz'));
     }
 
+
     /**
      * Update the specified resource in storage.
      */
@@ -83,7 +84,7 @@ class QuizController extends Controller
             'title' => $validator['title'],
             'description' => $validator['description'],
             'timeLimit' => $validator['timeLimit'],
-            'slug' => Str::slug(strtotime('now') . '/' . $request['title'])
+            'slug' => Str::slug(strtotime('now') . '-' . $request['title'])
         ]);
 
         $quiz->questions()->delete();
@@ -92,7 +93,7 @@ class QuizController extends Controller
             $questionItem = $quiz->questions()->create([
                 'name' => $question['quiz'],
             ]);
-            foreach ($question['option'] as $optionKey => $option) {
+            foreach ($question['options'] as $optionKey => $option) {
                 $questionItem->options()->create([
                     'name' => $option,
                     'is_correct' => $question['correct'] == $optionKey ? 1 : 0,
@@ -115,5 +116,11 @@ class QuizController extends Controller
     public function results(Quiz $quiz)
     {
         return view('dashboard.results', compact('quiz'));
+    }
+    public function takeQuiz(string $slug)
+    {
+        $quiz = Quiz::query()->where('slug', $slug)->with('questions.options')->first();
+        return view('quiz.take-quiz',
+            ['quiz'=> $quiz,]);
     }
 }
