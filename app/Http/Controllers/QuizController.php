@@ -93,7 +93,7 @@ class QuizController extends Controller
             $questionItem = $quiz->questions()->create([
                 'name' => $question['quiz'],
             ]);
-            foreach ($question['options'] as $optionKey => $option) {
+            foreach ($question['option'] as $optionKey => $option) {
                 $questionItem->options()->create([
                     'name' => $option,
                     'is_correct' => $question['correct'] == $optionKey ? 1 : 0,
@@ -121,6 +121,8 @@ class QuizController extends Controller
     {
         $quiz = Quiz::query()->where('slug', $slug)->with('questions.options')->first();
         return view('quiz.take-quiz',
-            ['quiz'=> $quiz,]);
+            [
+                'quiz'=> $quiz,
+            ]);
     }
 }

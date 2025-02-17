@@ -12,7 +12,6 @@
         toastr.error("{{ session('error') }}");
     @endif
 </script>
-
 @vite('resources/js/add-quiz.js')
 <body class="bg-gray-100">
 <div class="flex min-h-screen">
