@@ -6,10 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    protected $fillable = [
-        'quiz_id',
-        'name'
-    ];
     /**
      * Run the migrations.
      */
@@ -17,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->uni;
             $table->foreignId('quiz_id')->constrained('quizzes')->onDelete('cascade');
             $table->timestamp('started_at');
             $table->timestamp('finished_at')->nullable();
